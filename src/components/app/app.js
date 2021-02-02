@@ -1,34 +1,48 @@
-import React from 'react';
-import {Col, Row, Container} from 'reactstrap';
-import Header from '../header';
-import RandomChar from '../randomChar';
-import ItemList from '../itemList';
-import CharDetails from '../charDetails';
+import React, { Component } from "react";
+import { Col, Row, Container } from "reactstrap";
+import Header from "../header";
+import RandomChar from "../randomChar";
+import ErrorMessage from "../errorMessage";
+import CharacterPage from "../characterPage/characterPage";
 
+class App extends Component {
+  state = {
+    hideRandomChar: false,
+    error: false,
+  };
 
-const App = () => {
+  onHideChar = () => {
+    this.setState(({ hideRandomChar }) => {
+      return { hideRandomChar: !hideRandomChar };
+    });
+  };
+  componentDidCatch() {
+    this.setState({
+      error: true,
+    });
+  }
+  render() {
+    const content = this.state.hideRandomChar ? null : <RandomChar />;
+    if (this.state.error) {
+      return <ErrorMessage />;
+    }
     return (
-        <> 
-            <Container>
-                <Header />
-            </Container>
-            <Container>
-                <Row>
-                    <Col lg={{size: 5, offset: 0}}>
-                        <RandomChar/>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md='6'>
-                        <ItemList />
-                    </Col>
-                    <Col md='6'>
-                        <CharDetails />
-                    </Col>
-                </Row>
-            </Container>
-        </>
+      <>
+        <Container>
+          <Header />
+        </Container>
+        <Container>
+          <Row>
+            <Col lg={{ size: 5, offset: 0 }}>
+              {content}
+              <button onClick={this.onHideChar}>Hide char</button>
+            </Col>
+          </Row>
+          <CharacterPage />
+        </Container>
+      </>
     );
-};
+  }
+}
 
 export default App;
