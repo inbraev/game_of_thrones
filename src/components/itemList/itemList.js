@@ -13,14 +13,16 @@ export default class ItemList extends Component {
     });
   }
   renderItems(itemList) {
-    return itemList.map((item, index) => {
+    return itemList.map((item) => {
+      const { id } = item;
+      const label = this.props.renderItem(item);
       return (
         <li
-          key={index}
+          key={id}
           className="list-group-item"
-          onClick={() => this.props.onCharSelected(41 + index)}
+          onClick={() => this.props.onItemSelected(id)}
         >
-          {item.name}
+          {label}
         </li>
       );
     });

@@ -15,6 +15,7 @@ export default class GotService {
   };
   getCharacter = async (id) => {
     const result = await this.getResource(`/characters/${id}`);
+
     return this._transformCharacter(result);
   };
   getAllBooks = async () => {
@@ -34,10 +35,14 @@ export default class GotService {
     const house = await this.getResource(`/houses/${id}`);
     return this._transformHouse(house);
   };
-  isSet(data) {
+  isSet = (data) => {
     return data || "No data :(";
-  }
-  _transformCharacter(char) {
+  };
+  _extractId = (item) => {
+    const regExp = /\/([0-9]*)$/;
+    return item.url.match(regExp)[1];
+  };
+  _transformCharacter = (char) => {
     return {
       id: this._extractId(char),
       name: this.isSet(char.name),
@@ -46,11 +51,8 @@ export default class GotService {
       died: this.isSet(char.died),
       culture: this.isSet(char.culture),
     };
-  }
-  _extractId(item) {
-    const regExp = /\/([0-9]*)$/;
-    return item.url.match(regExp)[1];
-  }
+  };
+
   _transformHouse(house) {
     return {
       name: house.name,
