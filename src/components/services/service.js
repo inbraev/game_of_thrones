@@ -19,7 +19,7 @@ export default class GotService {
     return this._transformCharacter(result);
   };
   getAllBooks = async () => {
-    const result = await this.getResource("/books?page=5");
+    const result = await this.getResource("/books");
     return result.map(this._transformBook);
   };
   getBook = async (id) => {
@@ -53,23 +53,24 @@ export default class GotService {
     };
   };
 
-  _transformHouse(house) {
+  _transformHouse = (house) => {
     return {
-      name: house.name,
-      region: house.region,
-      words: house.words,
-      titles: house.titles,
-      overlord: house.overlord,
-      ancestralWeapons: house.ancestralWeapons,
+      id: this._extractId(house),
+      name: this.isSet(house.name),
+      region: this.isSet(house.region),
+      words: this.isSet(house.words),
+      titles: this.isSet(house.titles.join(", ")),
+      ancestralWeapons: this.isSet(house.ancestralWeapons.join(", ")),
     };
-  }
+  };
 
-  _transformBook(book) {
+  _transformBook = (book) => {
     return {
-      name: book.name,
-      numberOfPages: book.numberOfPages,
-      publisher: book.publisher,
-      released: book.released,
+      id: this._extractId(book),
+      name: this.isSet(book.name),
+      numberOfPages: this.isSet(book.numberOfPages),
+      publisher: this.isSet(book.publisher),
+      released: this.isSet(new Date(book.released).toDateString()),
     };
-  }
+  };
 }
